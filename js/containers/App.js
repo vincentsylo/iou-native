@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux/native';
+import { Provider } from 'react-redux';
 import { Router } from 'react-native-router-flux';
 import scenes from './Scenes';
 import store from '../store/configureStore';

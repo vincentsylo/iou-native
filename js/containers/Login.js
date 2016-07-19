@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 export default class Login extends Component {
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Text>Login</Text>
       </View>
     );

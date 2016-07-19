@@ -1,5 +1,1 @@
-export const USER_SET = 'USER_SET';
-
-export function refreshUser() {
-
-}
+export const USER_LOGGED_IN = 'USER_LOGGED_IN';

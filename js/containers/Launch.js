@@ -14,9 +14,9 @@ export default class Launch extends Component {
     const { user } = this.props;
 
     if (_.get(user, 'isAuthenticated')) {
-      Actions.home({ type: 'replace' });
+      Actions.tabs({ type: 'replace' });
     } else {
-      Actions.home({ type: 'replace' });
+      Actions.tabs({ type: 'replace' });
     }
   }
 

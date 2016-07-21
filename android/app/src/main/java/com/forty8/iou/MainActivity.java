@@ -1,6 +1,9 @@
-package com.iou;
+package com.forty8.iou;
+
+import android.content.Intent;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {
@@ -12,5 +15,10 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "iou";
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }

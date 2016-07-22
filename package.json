@@ -6,9 +6,11 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "axios": "^0.13.1",
     "lodash": "^4.13.1",
     "react": "15.2.1",
     "react-native": "0.29.2",
+    "react-native-drawer": "^2.2.6",
     "react-native-fbsdk": "^0.2.2",
     "react-native-router-flux": "^3.31.1",
     "react-native-scrollable-tab-view": "^0.5.3",

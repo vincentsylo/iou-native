@@ -1,15 +1,20 @@
-import { USER_LOGGED_IN } from '../actions/user';
+import { USER_LOG_IN, USER_LOG_OUT } from '../actions/user';
 
 const initialState = {
-  isAuthenticated: false,
+  token: null,
 };
 
 export default function user(state = initialState, action = {}) {
   switch (action.type) {
-    case USER_LOGGED_IN:
+    case USER_LOG_IN:
       return {
           ...state,
-          isAuthenticated: action.isAuthenticated,
+          token: action.token,
+      };
+    case USER_LOG_OUT:
+      return {
+        ...state,
+        token: null,
       };
     default:
       return state;

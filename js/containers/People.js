@@ -1,16 +1,88 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
-  ScrollView,
-  Text
+  ListView,
+  View,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
+import Text from '../components/F8Text';
+import { connect } from 'react-redux';
+import { peopleFetch } from '../actions/people';
+import { secondary } from '../styles/colors';
+import _ from 'lodash';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
+@connect(state => ({ people: state.people }))
 export default class People extends Component {
+  static propTypes = {
+    dispatch: PropTypes.func,
+    people: PropTypes.object,
+  };
+
+  state = {
+    dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
+  };
+
+  componentDidMount() {
+    this.props.dispatch(peopleFetch());
+    this.updateDataSource(_.get(this.props, 'people.friends') || []);
+  }
+
+  componentWillReceiveProps(nextProps: object) {
+    this.updateDataSource(_.get(nextProps, 'people.friends') || []);
+  }
+
+  updateDataSource(friends: array) {
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const newDs = ds.cloneWithRows(friends);
+    this.setState({
+      dataSource: newDs,
+    });
+  }
+
+  renderRow(row: object) {
+    const pictureUrl = _.get(row, 'picture.data.url');
+    return (
+      <View
+        style={styles.row}>
+        <View style={styles.left}>
+          <TouchableOpacity>
+            <Image source={{ uri: pictureUrl }} style={styles.picture} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.center}>
+          <Text>{row.name}</Text>
+        </View>
+        
+        <View style={styles.right}>
+          <TouchableOpacity>
+            <Icon name="coffee" style={styles.icon} size={30} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  renderSeperator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+    return (
+      <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          backgroundColor: adjacentRowHighlighted ? 'red' : 'blue',
+        }}
+      />
+    );
+  }
+
   render() {
     return (
-      <ScrollView style={styles.root}>
-        <Text>People</Text>
-      </ScrollView>
+      <ListView
+        style={styles.root}
+        renderRow={::this.renderRow}
+        dataSource={this.state.dataSource}
+      />
     );
   }
 }
@@ -19,4 +91,29 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: secondary,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  picture: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+  },
+  left: {
+    marginHorizontal: 10,
+  },
+  center: {
+    flex: 1,
+  },
+  right: {
+    justifyContent: 'flex-end',
+    marginHorizontal: 10,
+  },
+  icon: {
+
+  }
 });

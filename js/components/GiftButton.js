@@ -9,7 +9,7 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { secondary } from '../styles/colors';
+import { primary, secondary } from '../styles/colors';
 
 const SELECT_DURATION = 1000;
 const ICON_SIZE = 24;
@@ -18,7 +18,7 @@ export default class GiftButton extends Component {
   static propTypes = {
     selectGift: PropTypes.func,
     giftType: PropTypes.string,
-    icon: PropTypes.string,
+    disabled: PropTypes.bool,
   };
 
   state = {
@@ -27,18 +27,21 @@ export default class GiftButton extends Component {
   };
 
   handleSelect() {
+    const { selectGift, giftType } = this.props;
+    const { selectedTime } = this.state;
+
     this.setState({
       selected: true,
     }, () => {
-      Animated.timing(this.state.selectedTime, {
+      Animated.timing(selectedTime, {
         duration: SELECT_DURATION,
         toValue: 4,
       }).start(() => {
         this.setState({
           selected: false,
         });
-        this.state.selectedTime.setValue(0);
-        this.props.selectGift(this.props.giftType);
+        selectedTime.setValue(0);
+        selectGift(giftType);
       });
     });
   }
@@ -56,17 +59,52 @@ export default class GiftButton extends Component {
     };
   }
 
-  render() {
-    const { icon, color } = this.props;
+  getMap() {
+    switch (this.props.giftType) {
+      case 'beer':
+        return {
+          icon: 'beer',
+          color: 'orange',
+        };
+      case 'food':
+        return {
+          icon: 'cutlery',
+          color: 'silver',
+        };
+      case 'coffee':
+        return {
+          icon: 'coffee',
+          color: primary,
+        };
+      case 'heart':
+        return {
+          icon: 'heart',
+          color: 'red',
+        };
+      default: return {};
+    }
+  }
+
+  renderView() {
     const { selected } = this.state;
 
     return (
-      <TouchableOpacity onPress={::this.handleSelect}>
-        <Animated.View style={[styles.button, selected ? ::this.getSelectedGiftStyle() : null]}>
-          <Icon name={icon} style={[styles.icon, { color }]} size={ICON_SIZE} />
-        </Animated.View>
-      </TouchableOpacity>
+      <Animated.View style={[styles.button, selected ? ::this.getSelectedGiftStyle() : null]}>
+        <Icon name={::this.getMap().icon} style={[styles.icon, { color: ::this.getMap().color }]} size={ICON_SIZE} />
+      </Animated.View>
     );
+  }
+
+  render() {
+    const { disabled } = this.props;
+
+    return disabled ?
+      ::this.renderView() :
+      (
+        <TouchableOpacity onPress={::this.handleSelect}>
+          {::this.renderView()}
+        </TouchableOpacity>
+      );
   }
 }
 

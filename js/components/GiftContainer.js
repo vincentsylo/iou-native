@@ -18,6 +18,7 @@ const ANIMATION_DURATION = 300;
 export default class GiftContainer extends Component {
   static propTypes = {
     selectGift: PropTypes.func,
+    fbId: PropTypes.string,
   };
 
   state = {
@@ -65,8 +66,12 @@ export default class GiftContainer extends Component {
     });
   }
 
+  handleSelect(gift) {
+    const { fbId, selectGift } = this.props;
+    selectGift(fbId, gift);
+  }
+
   render() {
-    const { selectGift } = this.props;
     const { open, menuTime } = this.state;
 
     const rootClass = [
@@ -83,10 +88,10 @@ export default class GiftContainer extends Component {
     return (
       <Animated.View style={rootClass}>
         <Animated.View style={containerClass}>
-          <GiftButton selectGift={selectGift} giftType="food" icon="cutlery" color="silver" />
-          <GiftButton selectGift={selectGift} giftType="beer" icon="beer" color="orange" />
-          <GiftButton selectGift={selectGift} giftType="heart" icon="heart" color="red" />
-          <GiftButton selectGift={selectGift} giftType="coffee" icon="coffee" color={primary} />
+          <GiftButton selectGift={::this.handleSelect} giftType="food" />
+          <GiftButton selectGift={::this.handleSelect} giftType="beer" />
+          <GiftButton selectGift={::this.handleSelect} giftType="heart" />
+          <GiftButton selectGift={::this.handleSelect} giftType="coffee" />
         </Animated.View>
         <View>
           {

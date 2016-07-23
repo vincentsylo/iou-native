@@ -9,6 +9,7 @@ import {
 import Text from '../components/F8Text';
 import { connect } from 'react-redux';
 import { peopleFetch } from '../actions/people';
+import { giftSend } from '../actions/gift';
 import { secondary } from '../styles/colors';
 import _ from 'lodash';
 import GiftContainer from '../components/GiftContainer';
@@ -41,8 +42,8 @@ export default class People extends Component {
     });
   }
 
-  selectGift(gift) {
-    alert(`selected ${gift}`);
+  selectGift(fbId, type) {
+    this.props.dispatch(giftSend(fbId, type));
   }
 
   renderRow(row: object) {
@@ -62,20 +63,9 @@ export default class People extends Component {
         </View>
 
         <View style={styles.right}>
-          <GiftContainer selectGift={::this.selectGift} />
+          <GiftContainer selectGift={::this.selectGift} fbId={row.id} />
         </View>
       </View>
-    );
-  }
-
-  renderSeperator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
-    return (
-      <View
-        key={`${sectionID}-${rowID}`}
-        style={{
-          backgroundColor: adjacentRowHighlighted ? 'red' : 'blue',
-        }}
-      />
     );
   }
 
@@ -117,7 +107,4 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginHorizontal: 10,
   },
-  icon: {
-
-  }
 });

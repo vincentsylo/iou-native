@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
   View,
@@ -36,7 +36,7 @@ export default class Tabs extends Component {
           <Header rightAction={::this.openDrawer} />
           <ScrollableTabView
             initialPage={1}
-            tabBarPosition="bottom"
+            tabBarPosition="top"
             renderTabBar={() => <TabBar />}
           >
             <View tabLabel="book" style={styles.tabView}>

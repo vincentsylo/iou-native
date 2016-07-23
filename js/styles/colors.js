@@ -1,4 +1,4 @@
-export const primary = '#C47979';
+export const primary = '#f60';
 export const secondary = '#fff';
 export const accent = '#ddd';
 

@@ -33,7 +33,7 @@ export default class TabBar extends Component {
               <TouchableOpacity key={tab} onPress={() => goToPage(i)} style={styles.tab}>
                 <Icon
                   name={tab}
-                  size={30}
+                  size={25}
                   color={activeTab === i ? 'rgb(59,89,152)' : 'rgb(204,204,204)'}
                 />
               </TouchableOpacity>
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 5,
     borderWidth: 1,
-    borderBottomWidth: 0,
+    borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderTopColor: 'rgba(0,0,0,0.05)',
+    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
 });

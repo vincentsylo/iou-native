@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { peopleFetch } from '../actions/people';
 import { secondary } from '../styles/colors';
 import _ from 'lodash';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import GiftContainer from '../components/GiftContainer';
 
 @connect(state => ({ people: state.people }))
 export default class People extends Component {
@@ -41,8 +41,13 @@ export default class People extends Component {
     });
   }
 
+  selectGift(gift) {
+    alert(`selected ${gift}`);
+  }
+
   renderRow(row: object) {
     const pictureUrl = _.get(row, 'picture.data.url');
+
     return (
       <View
         style={styles.row}>
@@ -55,11 +60,9 @@ export default class People extends Component {
         <View style={styles.center}>
           <Text>{row.name}</Text>
         </View>
-        
+
         <View style={styles.right}>
-          <TouchableOpacity>
-            <Icon name="coffee" style={styles.icon} size={30} />
-          </TouchableOpacity>
+          <GiftContainer selectGift={::this.selectGift} />
         </View>
       </View>
     );
@@ -79,6 +82,7 @@ export default class People extends Component {
   render() {
     return (
       <ListView
+        enableEmptySections
         style={styles.root}
         renderRow={::this.renderRow}
         dataSource={this.state.dataSource}

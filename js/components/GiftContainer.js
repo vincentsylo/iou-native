@@ -11,13 +11,14 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { primary, secondary, accent } from '../styles/colors';
 import GiftButton from './GiftButton';
+import { BEER, FOOD, COFFEE, HEART } from '../constants/giftTypes';
 
 const HOLD_DURATION = 200;
 const ANIMATION_DURATION = 300;
 
 export default class GiftContainer extends Component {
   static propTypes = {
-    selectGift: PropTypes.func,
+    sendGift: PropTypes.func,
     fbId: PropTypes.string,
   };
 
@@ -67,8 +68,8 @@ export default class GiftContainer extends Component {
   }
 
   handleSelect(gift) {
-    const { fbId, selectGift } = this.props;
-    selectGift(fbId, gift);
+    const { fbId, sendGift } = this.props;
+    sendGift(fbId, gift);
   }
 
   render() {
@@ -88,10 +89,10 @@ export default class GiftContainer extends Component {
     return (
       <Animated.View style={rootClass}>
         <Animated.View style={containerClass}>
-          <GiftButton selectGift={::this.handleSelect} giftType="food" />
-          <GiftButton selectGift={::this.handleSelect} giftType="beer" />
-          <GiftButton selectGift={::this.handleSelect} giftType="heart" />
-          <GiftButton selectGift={::this.handleSelect} giftType="coffee" />
+          <GiftButton selectGift={::this.handleSelect} giftType={FOOD.name} />
+          <GiftButton selectGift={::this.handleSelect} giftType={BEER.name} />
+          <GiftButton selectGift={::this.handleSelect} giftType={HEART.name} />
+          <GiftButton selectGift={::this.handleSelect} giftType={COFFEE.name} />
         </Animated.View>
         <View>
           {

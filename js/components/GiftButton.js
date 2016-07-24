@@ -9,7 +9,8 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { primary, secondary } from '../styles/colors';
+import { secondary } from '../styles/colors';
+import { BEER, FOOD, COFFEE, HEART, UNKNOWN } from '../constants/giftTypes';
 
 const SELECT_DURATION = 1000;
 const ICON_SIZE = 24;
@@ -61,27 +62,15 @@ export default class GiftButton extends Component {
 
   getMap() {
     switch (this.props.giftType) {
-      case 'beer':
-        return {
-          icon: 'beer',
-          color: 'orange',
-        };
-      case 'food':
-        return {
-          icon: 'cutlery',
-          color: 'silver',
-        };
-      case 'coffee':
-        return {
-          icon: 'coffee',
-          color: primary,
-        };
-      case 'heart':
-        return {
-          icon: 'heart',
-          color: 'red',
-        };
-      default: return {};
+      case BEER.name:
+        return BEER;
+      case FOOD.name:
+        return FOOD;
+      case COFFEE.name:
+        return COFFEE;
+      case HEART.name:
+        return HEART;
+      default: return UNKNOWN;
     }
   }
 

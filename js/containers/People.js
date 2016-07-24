@@ -55,12 +55,13 @@ export default class People extends Component {
   sendMultiGift() {
     const { multiGift, recipients } = this.state;
 
+    _.forEach(recipients, (recipient) => {
+      this.sendSingleGift(recipient, multiGift.name);
+    });
+
     this.setState({
       multiGift: null,
-    }, () => {
-      _.forEach(recipients, (recipient) => {
-        this.sendSingleGift(recipient, multiGift.name);
-      });
+      recipients: [],
     });
   }
 

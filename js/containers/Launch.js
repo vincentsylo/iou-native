@@ -4,12 +4,18 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { userLogin } from '../actions/user';
+import CodePushControl from '../components/CodePushControl';
 
 @connect(state => ({ user: state.user }))
 export default class Launch extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     user: PropTypes.object,
+  };
+
+  state = {
+    upToDate: false,
+    foundUser: false,
   };
 
   componentWillMount() {
@@ -20,7 +26,18 @@ export default class Launch extends Component {
     const { user } = this.props;
 
     if (user !== nextProps.user) {
-      if (_.get(nextProps.user, 'token')) {
+      this.setState({
+        foundUser: true,
+      }, this.launchApp);
+    }
+  }
+
+  launchApp() {
+    const { upToDate, foundUser } = this.state;
+    const { user } = this.props;
+
+    if (upToDate && foundUser) {
+      if (_.get(user, 'token')) {
         Actions.tabs({type: 'replace'});
       } else {
         Actions.login({type: 'replace'});
@@ -28,10 +45,17 @@ export default class Launch extends Component {
     }
   }
 
+  syncComplete() {
+    this.setState({
+      upToDate: true,
+    }, this.launchApp);
+  }
+
   render() {
     return (
       <View style={styles.root}>
         <ActivityIndicator size="large" />
+        <CodePushControl syncComplete={::this.syncComplete} />
       </View>
     );
   }

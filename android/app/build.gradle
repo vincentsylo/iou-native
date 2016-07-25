@@ -83,15 +83,28 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    signingConfigs {
+        Staging {
+            keyAlias 'Staging'
+            keyPassword 'Arh5959j'
+            storeFile file('/Users/vincentlo/Documents/Personal/iou-native/android/keystores/staging.keystore.properties')
+            storePassword 'Arh5959j'
+        }
+        Release {
+            keyAlias 'Release'
+            keyPassword 'Arh5959j'
+            storeFile file('/Users/vincentlo/Documents/Personal/iou-native/android/keystores/release.keystore.properties')
+            storePassword 'Arh5959j'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
-        applicationId "com.iou"
+        applicationId "com.forty8.iou"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName '1.0.0'
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -105,9 +118,18 @@ android {
         }
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "CODEPUSH_KEY", '""'
+        }
+        staging {
+            buildConfigField "String", "CODEPUSH_KEY", '"199uPnmSd58g1K9GEorO1Sj5JocBE1mRlp0ug"'
+            signingConfig signingConfigs.Staging
+        }
         release {
+            buildConfigField "String", "CODEPUSH_KEY", '"6ueD2LDvwXl_1Ddl2Qnc89nHbbxgE1mRlp0ug"'
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.Release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -115,7 +137,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -123,14 +145,18 @@ android {
             }
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
+    compile project(':react-native-code-push')
     compile project(':react-native-fbsdk')
     compile project(':react-native-vector-icons')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
 }
 
 // Run this once to be able to run the application with BUCK

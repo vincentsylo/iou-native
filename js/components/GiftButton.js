@@ -9,7 +9,7 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { secondary } from '../styles/colors';
+import { accent } from '../styles/colors';
 import { BEER, FOOD, COFFEE, HEART, UNKNOWN } from '../constants/giftTypes';
 
 const SELECT_DURATION = 1000;
@@ -56,6 +56,11 @@ export default class GiftButton extends Component {
           inputRange: [0, 1, 2, 3, 4],
           outputRange: ['0deg', '-30deg', '0deg', '30deg', '0deg'],
         }),
+      }, {
+        scale: selectedTime.interpolate({
+          inputRange: [0, 1, 2, 3, 4],
+          outputRange: [1, 1.1, 1.2, 1.1, 1],
+        }),
       }],
     };
   }
@@ -101,9 +106,9 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 5,
-    backgroundColor: secondary,
-    borderRadius: 15,
+    margin: 5,
+    backgroundColor: accent,
+    borderRadius: 18,
     height: 36,
     width: 36,
   }

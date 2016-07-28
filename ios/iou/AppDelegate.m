@@ -35,8 +35,8 @@
   NSURL *jsCodeLocation;
 
   #if DEBUG
-    //jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.115:8081/index.ios.bundle?platform=ios&dev=true"];
-    jsCodeLocation = [CodePush bundleURL]; // Staging
+    jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.115:8081/index.ios.bundle?platform=ios&dev=true"];
+    //jsCodeLocation = [CodePush bundleURL]; // Staging
   #else
 //    [[RCTBundleURLProvider sharedSettings] setDefaults];
 //    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];

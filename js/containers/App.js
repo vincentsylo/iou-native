@@ -3,6 +3,9 @@ import {
   StyleSheet,
   View,
   StatusBar,
+  LayoutAnimation,
+  UIManager,
+  Platform,
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { Router, Scene } from 'react-native-router-flux';
@@ -12,6 +15,14 @@ import Tabs from './Tabs';
 import store from '../store/configureStore';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental(true)
+    }
+  }
+
   render() {
     return (
       <Provider store={store}>

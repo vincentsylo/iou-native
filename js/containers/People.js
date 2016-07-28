@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  LayoutAnimation,
 } from 'react-native';
 import Text from '../components/F8Text';
 import { connect } from 'react-redux';
@@ -29,6 +30,7 @@ export default class People extends Component {
     dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
     multiGift: null,
     recipients: [],
+    hideContent: false,
   };
 
   componentDidMount() {
@@ -87,9 +89,14 @@ export default class People extends Component {
     });
   }
 
+  toggleMenu() {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    this.setState({ hideContent: !this.state.hideContent });
+  }
+
   renderRow(row: object) {
     const pictureUrl = _.get(row, 'picture.data.url');
-    const { multiGift, recipients } = this.state;
+    const { multiGift, recipients, hideContent } = this.state;
     const selectedRecipient = _.indexOf(recipients, row.id) > -1;
     
     return (
@@ -102,7 +109,9 @@ export default class People extends Component {
         </View>
 
         <View style={styles.center}>
-          <Text>{row.name}</Text>
+          {
+            hideContent ? null : <Text>{row.name}</Text>
+          }
         </View>
 
         <View style={styles.right}>
@@ -116,7 +125,13 @@ export default class People extends Component {
                 <TouchableOpacity onPress={() => ::this.selectRecipients(row.id)}>
                   <GiftButton disabled />
                 </TouchableOpacity>
-            ) : <GiftContainer sendGift={::this.sendSingleGift} fbId={row.id} />
+            ) : (
+              <GiftContainer
+                sendGift={::this.sendSingleGift}
+                fbId={row.id}
+                toggleMenu={::this.toggleMenu}
+              />
+            )
           }
         </View>
       </View>
@@ -172,14 +187,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   left: {
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   center: {
     flex: 1,
   },
   right: {
     justifyContent: 'flex-end',
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   icon: {
     color: secondary,

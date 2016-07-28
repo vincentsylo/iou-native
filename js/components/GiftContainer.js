@@ -7,113 +7,70 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Animated,
+  LayoutAnimation,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { primary, secondary, accent } from '../styles/colors';
+import { primary, accent } from '../styles/colors';
 import GiftButton from './GiftButton';
 import { BEER, FOOD, COFFEE, HEART } from '../constants/giftTypes';
-
-const HOLD_DURATION = 200;
-const ANIMATION_DURATION = 300;
 
 export default class GiftContainer extends Component {
   static propTypes = {
     sendGift: PropTypes.func,
     fbId: PropTypes.string,
+    toggleMenu: PropTypes.func,
   };
 
   state = {
-    holdTime: new Animated.Value(0),
-    menuTime: new Animated.Value(0),
-    selectedTime: new Animated.Value(0),
     selected: '',
     open: false,
   };
 
-  handlePressIn() {
-    Animated.timing(this.state.holdTime, {
-      duration: HOLD_DURATION,
-      toValue: 1,
-    }).start(() => {
-      Animated.timing(this.state.menuTime, {
-        duration: ANIMATION_DURATION,
-        toValue: 1,
-      }).start(::this.holdComplete);
-    });
+  openMenu() {
+    this.setState({
+      open: true,
+    }, this.props.toggleMenu);
   }
 
-  handlePressOut(force) {
-    this.state.holdTime.setValue(0);
-
-    if (this.state.menuTime._value !== 1 || force) {
-      Animated.timing(this.state.menuTime, {
-        duration: this.state.menuTime._value * ANIMATION_DURATION,
-        toValue: 0,
-      }).start(::this.holdEnd);
-    }
-  }
-
-  holdComplete() {
-    if (this.state.holdTime._value === 1) {
-      this.setState({
-        open: true,
-      });
-    }
-  }
-
-  holdEnd() {
+  closeMenu() {
     this.setState({
       open: false,
-    });
+    }, this.props.toggleMenu);
   }
 
   handleSelect(gift) {
     const { fbId, sendGift } = this.props;
     sendGift(fbId, gift);
+    this.setState({
+      open: false,
+    }, this.props.toggleMenu);
   }
 
   render() {
-    const { open, menuTime } = this.state;
+    const { open } = this.state;
 
-    const rootClass = [
-      styles.root,
-      open ? styles.openRoot : null,
-    ];
-    const containerClass = [
-      styles.buttonContainer,
-      {
-        transform: [{ scaleY: menuTime }],
-      },
-    ];
-
-    return (
-      <Animated.View style={rootClass}>
-        <Animated.View style={containerClass}>
+    return open ? (
+      <View style={styles.root}>
+        <Animated.View style={styles.buttonContainer}>
           <GiftButton selectGift={::this.handleSelect} giftType={FOOD.name} />
           <GiftButton selectGift={::this.handleSelect} giftType={BEER.name} />
           <GiftButton selectGift={::this.handleSelect} giftType={HEART.name} />
           <GiftButton selectGift={::this.handleSelect} giftType={COFFEE.name} />
         </Animated.View>
-        <View>
-          {
-            open ?
-              <TouchableOpacity onPress={() => this.handlePressOut(true)}>
-                <View style={styles.button}>
-                  <Icon name="close" style={[styles.icon, { color: '#cc0000' }]} size={24} />
-                </View>
-              </TouchableOpacity>
-              :
-              <TouchableWithoutFeedback
-                onPressIn={::this.handlePressIn}
-                onPressOut={() => this.handlePressOut(false)}
-              >
-                <Animated.View style={styles.button}>
-                  <Icon name="gift" style={[styles.icon, { color: primary }]} size={24} />
-                </Animated.View>
-              </TouchableWithoutFeedback>
-          }
-        </View>
-      </Animated.View>
+        <TouchableOpacity onPress={::this.closeMenu}>
+          <View style={styles.button}>
+            <Icon name="close" style={[styles.icon, { color: '#cc0000' }]} size={24} />
+          </View>
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <View style={styles.root}>
+        <TouchableOpacity onPress={::this.openMenu}>
+          <View style={styles.button}>
+            <Icon name="gift" style={[styles.icon, { color: primary }]} size={24} />
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -123,32 +80,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 54,
-    backgroundColor: accent,
     borderRadius: 5,
-  },
-  openRoot: {
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
   },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    right: 46, // sum of button width + margin
-    backgroundColor: accent,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
     height: 54,
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 5,
-    backgroundColor: secondary,
-    borderRadius: 15,
+    marginHorizontal: 3,
+    backgroundColor: accent,
+    borderRadius: 18,
     height: 36,
     width: 36,
   }

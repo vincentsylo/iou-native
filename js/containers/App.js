@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import { Router, Scene } from 'react-native-router-flux';
 import Launch from './Launch';
 import Login from './Login';
+import Profile from './Profile';
 import Tabs from './Tabs';
 import store from '../store/configureStore';
 
@@ -37,6 +38,7 @@ export default class App extends Component {
               <Scene key="launch" component={Launch} initial />
               <Scene key="login" component={Login} />
               <Scene key="tabs" component={Tabs} />
+              <Scene key="profile" component={Profile} schema="modal" direction="vertical" />
             </Scene>
           </Router>
         </View>

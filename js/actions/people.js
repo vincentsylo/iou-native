@@ -1,19 +1,36 @@
 import api from '../utils/api';
 
-export const PEOPLE_FETCH = 'PEOPLE_FETCH';
+export const PEOPLE_FRIENDS_FETCH = 'PEOPLE_FRIENDS_FETCH';
+export const PEOPLE_SEARCH = 'PEOPLE_SEARCH';
 
-export function peopleFetch() {
+export function peopleFriendsFetch() {
   return (dispatch, getState) => {
     api(getState().user).get('/user/fb/friends')
       .then((json) => {
-        dispatch(peopleFetched(json.data));
+        dispatch(peopleFriendsFetched(json.data));
       });
   }
 }
 
-function peopleFetched(friends) {
+function peopleFriendsFetched(friends) {
   return {
-    type: PEOPLE_FETCH,
+    type: PEOPLE_FRIENDS_FETCH,
     friends,
+  };
+}
+
+export function peopleSearch(fbId) {
+  return (dispatch, getState) => {
+    api(getState().user).get(`/user/fb/${fbId}`)
+      .then((json) => {
+        dispatch(peopleSearched(json.data));
+      });
+  }
+}
+
+function peopleSearched(person) {
+  return {
+    type: PEOPLE_SEARCH,
+    person,
   };
 }

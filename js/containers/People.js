@@ -3,13 +3,12 @@ import {
   StyleSheet,
   ListView,
   View,
-  Image,
   TouchableOpacity,
   LayoutAnimation,
 } from 'react-native';
 import Text from '../components/F8Text';
 import { connect } from 'react-redux';
-import { peopleFetch } from '../actions/people';
+import { peopleFriendsFetch } from '../actions/people';
 import { giftSend } from '../actions/gift';
 import { secondary, accent } from '../styles/colors';
 import _ from 'lodash';
@@ -18,6 +17,7 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MultiActionButton from '../components/MultiActionButton';
 import GiftButton from '../components/GiftButton';
+import ProfilePicture from '../components/ProfilePicture';
 
 @connect(state => ({ people: state.people }))
 export default class People extends Component {
@@ -34,7 +34,7 @@ export default class People extends Component {
   };
 
   componentDidMount() {
-    this.props.dispatch(peopleFetch());
+    this.props.dispatch(peopleFriendsFetch());
     this.updateDataSource(_.get(this.props, 'people.friends') || []);
   }
 
@@ -107,7 +107,7 @@ export default class People extends Component {
   }
 
   renderRow(row: object) {
-    const pictureUrl = _.get(row, 'picture.data.url');
+    const picture = _.get(row, 'picture.data.url');
     const { multiGift, recipients, hideContent } = this.state;
     const selectedRecipient = _.indexOf(recipients, row.id) > -1;
     
@@ -115,9 +115,7 @@ export default class People extends Component {
       <View
         style={styles.row}>
         <View style={styles.left}>
-          <TouchableOpacity>
-            <Image source={{ uri: pictureUrl }} style={styles.picture} />
-          </TouchableOpacity>
+          <ProfilePicture picture={picture} fbId={row.id} />
         </View>
 
         <View style={styles.center}>
@@ -193,11 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: secondary,
     paddingVertical: 10,
     alignItems: 'center',
-  },
-  picture: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
   },
   left: {
     marginHorizontal: 10,

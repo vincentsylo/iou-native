@@ -4,7 +4,6 @@ import {
   View,
   ListView,
   TouchableOpacity,
-  Image,
   Alert,
 } from 'react-native';
 import Text from '../components/F8Text';
@@ -13,6 +12,7 @@ import { giftReceivedFetch, giftRedeem } from '../actions/gift';
 import _ from 'lodash';
 import { secondary, danger, success, accent } from '../styles/colors';
 import GiftButton from '../components/GiftButton';
+import ProfilePicture from '../components/ProfilePicture';
 
 @connect(state => ({ gift: state.gift }))
 export default class Redeem extends Component {
@@ -73,9 +73,7 @@ export default class Redeem extends Component {
       <View
         style={styles.row}>
         <View style={styles.left}>
-          <TouchableOpacity>
-            <Image source={{ uri: picture }} style={styles.picture} />
-          </TouchableOpacity>
+          <ProfilePicture picture={picture} fbId={id} />
         </View>
 
         <View style={styles.center}>

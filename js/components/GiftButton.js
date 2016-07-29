@@ -20,6 +20,9 @@ export default class GiftButton extends Component {
     selectGift: PropTypes.func,
     giftType: PropTypes.string,
     disabled: PropTypes.bool,
+    redeemGift: PropTypes.func,
+    remindGift: PropTypes.func,
+    style: PropTypes.object,
   };
 
   state = {
@@ -28,7 +31,7 @@ export default class GiftButton extends Component {
   };
 
   handleSelect() {
-    const { selectGift, giftType } = this.props;
+    const { selectGift, redeemGift, remindGift, giftType } = this.props;
     const { selectedTime } = this.state;
 
     this.setState({
@@ -42,7 +45,13 @@ export default class GiftButton extends Component {
           selected: false,
         });
         selectedTime.setValue(0);
-        selectGift(giftType);
+        if (redeemGift) {
+          redeemGift();
+        } else if (remindGift) {
+          remindGift();
+        } else {
+          selectGift(giftType);
+        }
       });
     });
   }
@@ -81,9 +90,10 @@ export default class GiftButton extends Component {
 
   renderView() {
     const { selected } = this.state;
+    const { style } = this.props;
 
     return (
-      <Animated.View style={[styles.button, selected ? ::this.getSelectedGiftStyle() : null]}>
+      <Animated.View style={[styles.button, style, selected ? ::this.getSelectedGiftStyle() : null]}>
         <Icon name={::this.getMap().icon} style={[styles.icon, { color: ::this.getMap().color }]} size={ICON_SIZE} />
       </Animated.View>
     );
@@ -106,10 +116,10 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 5,
+    margin: 1,
     backgroundColor: accent,
-    borderRadius: 18,
-    height: 36,
-    width: 36,
+    borderRadius: 20,
+    height: 40,
+    width: 40,
   }
 });

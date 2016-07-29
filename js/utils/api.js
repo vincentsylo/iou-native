@@ -9,6 +9,7 @@ function getHeaders(accessToken) {
 
 export default function api(user) {
   return axios.create({
+    //baseURL: 'https://forty8-iou.herokuapp.com/api',
     baseURL: 'http://192.168.1.115:8080/api',
     headers: getHeaders(_.get(user, 'token.accessToken') || null),
   });

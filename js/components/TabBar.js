@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
 } from 'react-native';
+import Text from './F8Text';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class TabBar extends Component {
@@ -14,14 +14,6 @@ export default class TabBar extends Component {
     tabs: PropTypes.array,
   };
 
-  // color between rgb(59,89,152) and rgb(204,204,204)
-  iconColor(progress) {
-    const red = 59 + (204 - 59) * progress;
-    const green = 89 + (204 - 89) * progress;
-    const blue = 152 + (204 - 152) * progress;
-    return `rgb(${red}, ${green}, ${blue})`;
-  }
-
   render() {
     const { tabs, goToPage, activeTab } = this.props;
 
@@ -30,12 +22,13 @@ export default class TabBar extends Component {
         {
           tabs.map((tab, i) => {
             return (
-              <TouchableOpacity key={tab} onPress={() => goToPage(i)} style={styles.tab}>
+              <TouchableOpacity key={i} onPress={() => goToPage(i)} style={styles.tab}>
                 <Icon
-                  name={tab}
+                  name={tab.icon}
                   size={25}
                   color={activeTab === i ? 'rgb(59,89,152)' : 'rgb(204,204,204)'}
                 />
+                <Text>{tab.title}</Text>
               </TouchableOpacity>
             );
           })

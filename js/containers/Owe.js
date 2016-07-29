@@ -5,12 +5,13 @@ import {
   ListView,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import Text from '../components/F8Text';
 import { connect } from 'react-redux';
-import { giftSentFetch } from '../actions/gift';
+import { giftSentFetch, giftRemind } from '../actions/gift';
 import _ from 'lodash';
-import { secondary } from '../styles/colors';
+import { secondary, accent, danger, success } from '../styles/colors';
 import GiftButton from '../components/GiftButton';
 
 @connect(state => ({ gift: state.gift }))
@@ -41,24 +42,53 @@ export default class Owe extends Component {
     });
   }
 
+  remindGift(id, name) {
+    Alert.alert(
+      'Remind',
+      `Are you sure you want to remind ${name} about this gift?`,
+      [
+        { text: 'Yes', onPress: () => this.props.dispatch(giftRemind(id)) },
+        { text: 'Not Now' },
+      ]
+    );
+  }
+
+  renderSeparator(sectionID: number, rowID: number) {
+    return (
+      <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          height: 1,
+          backgroundColor: accent,
+        }}
+      />
+    );
+  }
+
   renderRow(row: object) {
-    const pictureUrl = _.get(row, 'Recipient.picture');
+    const { Recipient, giftType, redeemed, id } = row;
+    const { picture, name } = Recipient;
 
     return (
       <View
         style={styles.row}>
         <View style={styles.left}>
           <TouchableOpacity>
-            <Image source={{ uri: pictureUrl }} style={styles.picture} />
+            <Image source={{ uri: picture }} style={styles.picture} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.center}>
-          <Text>{_.get(row, 'Recipient.name')}</Text>
+          <Text>{name}</Text>
         </View>
 
         <View style={styles.right}>
-          <GiftButton disabled giftType={_.get(row, 'giftType')} />
+          <GiftButton
+            disabled={redeemed}
+            giftType={giftType}
+            style={{ borderColor: redeemed ? danger : success, borderWidth: 1 }}
+            remindGift={() => ::this.remindGift(id, name)}
+          />
         </View>
       </View>
     );
@@ -70,6 +100,7 @@ export default class Owe extends Component {
         enableEmptySections
         style={styles.root}
         renderRow={::this.renderRow}
+        renderSeparator={::this.renderSeparator}
         dataSource={this.state.dataSource}
       />
     );

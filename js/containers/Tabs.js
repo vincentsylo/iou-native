@@ -39,13 +39,13 @@ export default class Tabs extends Component {
             tabBarPosition="top"
             renderTabBar={() => <TabBar />}
           >
-            <View tabLabel="book" style={styles.tabView}>
+            <View tabLabel={{ icon: 'book', title: 'Owe' }} style={styles.tabView}>
               <Owe />
             </View>
-            <View tabLabel="users" style={styles.tabView}>
+            <View tabLabel={{ icon: 'users', title: 'People' }} style={styles.tabView}>
               <People />
             </View>
-            <View tabLabel="gift" style={styles.tabView}>
+            <View tabLabel={{ icon: 'gift', title: 'Redeem' }} style={styles.tabView}>
               <Redeem />
             </View>
           </ScrollableTabView>

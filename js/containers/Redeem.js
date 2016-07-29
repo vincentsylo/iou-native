@@ -5,12 +5,13 @@ import {
   ListView,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import Text from '../components/F8Text';
 import { connect } from 'react-redux';
-import { giftReceivedFetch } from '../actions/gift';
+import { giftReceivedFetch, giftRedeem } from '../actions/gift';
 import _ from 'lodash';
-import { secondary } from '../styles/colors';
+import { secondary, danger, success, accent } from '../styles/colors';
 import GiftButton from '../components/GiftButton';
 
 @connect(state => ({ gift: state.gift }))
@@ -40,25 +41,54 @@ export default class Redeem extends Component {
       dataSource: newDs,
     });
   }
+  
+  redeemGift(id) {
+    Alert.alert(
+      'Redeem',
+      'Are you sure you want to redeem this gift?',
+      [
+        { text: 'Yes', onPress: () => this.props.dispatch(giftRedeem(id)) },
+        { text: 'Not Now' },
+      ]
+    );
+  }
+
+  renderSeparator(sectionID: number, rowID: number) {
+    return (
+      <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          height: 1,
+          backgroundColor: accent,
+        }}
+      />
+    );
+  }
 
   renderRow(row: object) {
-    const pictureUrl = _.get(row, 'Sender.picture');
+    const { Sender, giftType, redeemed, id } = row;
+    const { picture, name } = Sender;
 
     return (
       <View
         style={styles.row}>
         <View style={styles.left}>
           <TouchableOpacity>
-            <Image source={{ uri: pictureUrl }} style={styles.picture} />
+            <Image source={{ uri: picture }} style={styles.picture} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.center}>
-          <Text>{_.get(row, 'Sender.name')}</Text>
+          <Text>{name}</Text>
         </View>
 
         <View style={styles.right}>
-          <GiftButton disabled giftType={_.get(row, 'giftType')} />
+          <GiftButton
+            disabled={redeemed}
+            giftType={giftType}
+            redeemGift={() => ::this.redeemGift(id)}
+            style={{ borderColor: redeemed ? danger : success, borderWidth: 1 }}
+          />
         </View>
       </View>
     );
@@ -70,6 +100,7 @@ export default class Redeem extends Component {
         enableEmptySections
         style={styles.root}
         renderRow={::this.renderRow}
+        renderSeparator={::this.renderSeparator}
         dataSource={this.state.dataSource}
       />
     );

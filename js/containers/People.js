@@ -11,7 +11,7 @@ import Text from '../components/F8Text';
 import { connect } from 'react-redux';
 import { peopleFetch } from '../actions/people';
 import { giftSend } from '../actions/gift';
-import { secondary } from '../styles/colors';
+import { secondary, accent } from '../styles/colors';
 import _ from 'lodash';
 import GiftContainer from '../components/GiftContainer';
 import ActionButton from 'react-native-action-button';
@@ -94,6 +94,18 @@ export default class People extends Component {
     this.setState({ hideContent: !this.state.hideContent });
   }
 
+  renderSeparator(sectionID: number, rowID: number) {
+    return (
+      <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          height: 1,
+          backgroundColor: accent,
+        }}
+      />
+    );
+  }
+
   renderRow(row: object) {
     const pictureUrl = _.get(row, 'picture.data.url');
     const { multiGift, recipients, hideContent } = this.state;
@@ -147,6 +159,7 @@ export default class People extends Component {
           enableEmptySections
           style={styles.root}
           renderRow={::this.renderRow}
+          renderSeparator={::this.renderSeparator}
           dataSource={this.state.dataSource}
         />
         {
@@ -187,14 +200,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   left: {
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   center: {
     flex: 1,
   },
   right: {
     justifyContent: 'flex-end',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   icon: {
     color: secondary,

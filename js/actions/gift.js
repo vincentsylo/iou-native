@@ -3,6 +3,8 @@ import api from '../utils/api';
 export const GIFT_RECEIVED_FETCH = 'GIFT_RECEIVED_FETCH';
 export const GIFT_SENT_FETCH = 'GIFT_SENT_FETCH';
 export const GIFT_SEND = 'GIFT_SEND';
+export const GIFT_REDEEM = 'GIFT_REDEEM';
+export const GIFT_REMIND = 'GIFT_REMIND';
 
 export function giftReceivedFetch() {
   return (dispatch, getState) => {
@@ -52,5 +54,38 @@ export function giftSend(recipientId, type, description) {
 function giftSent() {
   return {
     type: GIFT_SEND
+  };
+}
+
+export function giftRedeem(giftId) {
+  return (dispatch, getState) => {
+    api(getState().user).post('/gift/redeem', {
+      giftId,
+    }).then(() => {
+      dispatch(giftRedeemed());
+      dispatch(giftReceivedFetch());
+    })
+  }
+}
+
+export function giftRedeemed() {
+  return {
+    type: GIFT_REDEEM,
+  };
+}
+
+export function giftRemind(giftId) {
+  return (dispatch, getState) => {
+    api(getState().user).post('/gift/remind', {
+      giftId,
+    }).then(() => {
+      dispatch(giftReminded());
+    });
+  }
+}
+
+export function giftReminded() {
+  return {
+    type: GIFT_REMIND,
   };
 }

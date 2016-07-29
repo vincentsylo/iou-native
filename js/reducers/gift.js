@@ -1,4 +1,10 @@
-import { GIFT_RECEIVED_FETCH, GIFT_SENT_FETCH, GIFT_SEND } from '../actions/gift';
+import {
+  GIFT_RECEIVED_FETCH,
+  GIFT_SENT_FETCH,
+  GIFT_SEND,
+  GIFT_REDEEM,
+  GIFT_REMIND,
+} from '../actions/gift';
 
 const initialState = {
   received: [],
@@ -18,6 +24,8 @@ export default function gift(state = initialState, action = {}) {
         sent: action.sent,
       };
     case GIFT_SEND:
+    case GIFT_REDEEM:
+    case GIFT_REMIND:
     default:
       return state;
   }

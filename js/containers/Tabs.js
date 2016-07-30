@@ -6,6 +6,7 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+import FCM from 'react-native-fcm';
 import Drawer from 'react-native-drawer';
 import DrawerContent from '../components/DrawerContent';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -16,6 +17,27 @@ import Redeem from './Redeem';
 import Owe from './Owe';
 
 export default class Tabs extends Component {
+  componentDidMount() {
+    FCM.requestPermissions(); // for iOS
+    FCM.getFCMToken().then(token => {
+      console.log(token)
+      // store fcm token in your server
+    });
+    this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+      // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
+    });
+    this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
+      console.log(token)
+      // fcm token may not be available on first load, catch it here
+    });
+  }
+
+  componentWillUnmount() {
+    // prevent leaking
+    this.refreshUnsubscribe();
+    this.notificationUnsubscribe();
+  }
+  
   openDrawer() {
     this._drawer.open();
   }

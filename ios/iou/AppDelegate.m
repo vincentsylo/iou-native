@@ -13,6 +13,7 @@
 #import "RCTRootView.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "CodePush.h"
+#import "RNFIRMessaging.h"
 
 @implementation AppDelegate
 
@@ -51,6 +52,7 @@
   
   [[FBSDKApplicationDelegate sharedInstance] application:application
                            didFinishLaunchingWithOptions:launchOptions];
+  [FIRApp configure];
   
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -58,6 +60,11 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler {
+  [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
+  handler(UIBackgroundFetchResultNewData);
 }
 
 @end

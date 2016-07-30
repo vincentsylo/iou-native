@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1098664870684",
+    "firebase_url": "https://forty8-iou.firebaseio.com",
+    "project_id": "forty8-iou",
+    "storage_bucket": "forty8-iou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098664870684:android:ac7acde7c979ef56",
+        "android_client_info": {
+          "package_name": "com.forty8.iou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098664870684-uqo1hg3voo4ng571j2rpod6378n6mh9j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkK4bKMJl6b4zkdqYs5dNtwguBnCsFDWM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,6 +15,7 @@
     "react-native-code-push": "^1.13.5-beta",
     "react-native-drawer": "^2.2.6",
     "react-native-fbsdk": "^0.2.2",
+    "react-native-fcm": "1.0.15",
     "react-native-router-flux": "^3.31.1",
     "react-native-scrollable-tab-view": "^0.5.3",
     "react-native-vector-icons": "^2.0.3",

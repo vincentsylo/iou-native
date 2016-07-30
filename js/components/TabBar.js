@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabs: {
-    height: 50,
+    height: 70,
     flexDirection: 'row',
     paddingVertical: 5,
     borderWidth: 1,

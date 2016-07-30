@@ -67,13 +67,13 @@ export default class Redeem extends Component {
 
   renderRow(row: object) {
     const { Sender, giftType, redeemed, id } = row;
-    const { picture, name } = Sender;
+    const { picture, name} = Sender;
 
     return (
       <View
         style={styles.row}>
         <View style={styles.left}>
-          <ProfilePicture picture={picture} fbId={id} />
+          <ProfilePicture picture={picture} fbId={Sender.facebookId} />
         </View>
 
         <View style={styles.center}>
@@ -130,5 +130,6 @@ const styles = StyleSheet.create({
   right: {
     justifyContent: 'flex-end',
     marginHorizontal: 10,
+    padding: 10,
   },
 });

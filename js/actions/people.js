@@ -24,7 +24,9 @@ export function peopleSearch(fbId) {
     api(getState().user).get(`/user/fb/${fbId}`)
       .then((json) => {
         dispatch(peopleSearched(json.data));
-      });
+      }).catch((error) => {
+      console.log(error);
+    });
   }
 }
 

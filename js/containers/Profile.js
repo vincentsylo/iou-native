@@ -42,7 +42,7 @@ export default class Profile extends Component {
 
     return person ? (
       <View style={styles.root}>
-        <Image resizeMode="stretch" source={{ uri: person.cover }} style={styles.cover} />
+        <Image resizeMode="contain" source={{ uri: person.cover }} style={styles.cover} />
         <Image
           source={{ uri: person.picture }}
           style={[styles.profilePicture, { left: (width - 150) / 2 }]}

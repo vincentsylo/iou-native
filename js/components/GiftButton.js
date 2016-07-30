@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { accent } from '../styles/colors';
-import { BEER, FOOD, COFFEE, HEART, UNKNOWN } from '../constants/giftTypes';
+import { BEER, FOOD, COFFEE, HEART, TICK, UNKNOWN } from '../constants/giftTypes';
 
 const SELECT_DURATION = 1000;
 const ICON_SIZE = 24;
@@ -84,6 +84,8 @@ export default class GiftButton extends Component {
         return COFFEE;
       case HEART.name:
         return HEART;
+      case TICK.name:
+        return TICK;
       default: return UNKNOWN;
     }
   }

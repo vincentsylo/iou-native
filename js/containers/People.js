@@ -10,7 +10,7 @@ import Text from '../components/F8Text';
 import { connect } from 'react-redux';
 import { peopleFriendsFetch } from '../actions/people';
 import { giftSend } from '../actions/gift';
-import { secondary, accent } from '../styles/colors';
+import { secondary, accent, success, danger } from '../styles/colors';
 import _ from 'lodash';
 import GiftContainer from '../components/GiftContainer';
 import ActionButton from 'react-native-action-button';
@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MultiActionButton from '../components/MultiActionButton';
 import GiftButton from '../components/GiftButton';
 import ProfilePicture from '../components/ProfilePicture';
+import { TICK } from '../constants/giftTypes';
 
 @connect(state => ({ people: state.people }))
 export default class People extends Component {
@@ -30,7 +31,7 @@ export default class People extends Component {
     dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
     multiGift: null,
     recipients: [],
-    hideContent: false,
+    showTick: false,
   };
 
   componentDidMount() {
@@ -63,7 +64,12 @@ export default class People extends Component {
 
     this.setState({
       multiGift: null,
-      recipients: [],
+      showTick: true,
+    }, () => {
+      setTimeout(() => this.setState({
+        showTick: false,
+        recipients: [],
+      }), 2000);
     });
   }
 
@@ -89,9 +95,9 @@ export default class People extends Component {
     });
   }
 
-  toggleMenu() {
+  toggleMenu(id) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-    this.setState({ hideContent: !this.state.hideContent });
+    this.selectRecipients(id);
   }
 
   renderSeparator(sectionID: number, rowID: number) {
@@ -106,9 +112,40 @@ export default class People extends Component {
     );
   }
 
+  renderSingleGift(row) {
+    const { showTick, recipients } = this.state;
+    const selectedRecipient = _.indexOf(recipients, row.id) > -1;
+
+    return showTick && selectedRecipient ? (
+      <GiftButton disabled giftType={TICK.name} style={{ backgroundColor: success }} />
+    ) : (
+      <GiftContainer
+        disabled={showTick}
+        sendGift={::this.sendSingleGift}
+        fbId={row.id}
+        toggleMenu={::this.toggleMenu}
+      />
+    );
+  }
+
+  renderMultiGift(row) {
+    const { multiGift, recipients } = this.state;
+    const selectedRecipient = _.indexOf(recipients, row.id) > -1;
+
+    return selectedRecipient ? (
+      <TouchableOpacity onPress={() => ::this.selectRecipients(row.id)}>
+        <GiftButton disabled giftType={multiGift.name} />
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity onPress={() => ::this.selectRecipients(row.id)}>
+        <GiftButton disabled />
+      </TouchableOpacity>
+    );
+  }
+
   renderRow(row: object) {
     const picture = _.get(row, 'picture.data.url');
-    const { multiGift, recipients, hideContent } = this.state;
+    const { multiGift, recipients, showTick } = this.state;
     const selectedRecipient = _.indexOf(recipients, row.id) > -1;
     
     return (
@@ -120,27 +157,16 @@ export default class People extends Component {
 
         <View style={styles.center}>
           {
-            hideContent ? null : <Text>{row.name}</Text>
+            !multiGift && selectedRecipient && !showTick ? null : <Text>{row.name}</Text>
           }
         </View>
 
         <View style={styles.right}>
           {
             multiGift ? (
-              selectedRecipient ?
-                <TouchableOpacity onPress={() => ::this.selectRecipients(row.id)}>
-                  <GiftButton disabled giftType={multiGift.name} />
-                </TouchableOpacity>
-                  :
-                <TouchableOpacity onPress={() => ::this.selectRecipients(row.id)}>
-                  <GiftButton disabled />
-                </TouchableOpacity>
+              ::this.renderMultiGift(row)
             ) : (
-              <GiftContainer
-                sendGift={::this.sendSingleGift}
-                fbId={row.id}
-                toggleMenu={::this.toggleMenu}
-              />
+              ::this.renderSingleGift(row)
             )
           }
         </View>
@@ -149,7 +175,7 @@ export default class People extends Component {
   }
 
   render() {
-    const { multiGift, recipients } = this.state;
+    const { multiGift, recipients, showTick } = this.state;
 
     return (
       <View style={styles.root}>
@@ -164,17 +190,17 @@ export default class People extends Component {
           multiGift ? (
             recipients.length > 0 ?
               <ActionButton
-                buttonColor="#00cc00"
+                buttonColor={success}
                 icon={<Icon name="send" size={16} style={styles.icon} />}
                 onPress={::this.sendMultiGift}
               />
               :
               <ActionButton
-                buttonColor="rgba(231,76,60,1)"
+                buttonColor={danger}
                 icon={<Icon name="undo" size={16} style={styles.icon} />}
                 onPress={() => this.setState({ multiGift: null })}
               />
-          ) : <MultiActionButton selectMultiGift={::this.selectMultiGift} />
+          ) : <MultiActionButton selectMultiGift={::this.selectMultiGift} showTick={showTick} />
         }
       </View>
     );

@@ -10,7 +10,7 @@ import {
   LayoutAnimation,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { primary, accent } from '../styles/colors';
+import { primary, accent, success } from '../styles/colors';
 import GiftButton from './GiftButton';
 import { BEER, FOOD, COFFEE, HEART } from '../constants/giftTypes';
 
@@ -19,58 +19,86 @@ export default class GiftContainer extends Component {
     sendGift: PropTypes.func,
     fbId: PropTypes.string,
     toggleMenu: PropTypes.func,
+    disabled: PropTypes.bool,
   };
 
   state = {
     selected: '',
     open: false,
+    showTick: false,
   };
 
   openMenu() {
+    const { toggleMenu, fbId } = this.props;
+
     this.setState({
       open: true,
-    }, this.props.toggleMenu);
+    }, () => toggleMenu(fbId));
   }
 
   closeMenu() {
+    const { toggleMenu, fbId } = this.props;
+
     this.setState({
       open: false,
-    }, this.props.toggleMenu);
+    }, () => toggleMenu(fbId));
+  }
+
+  toggleTick() {
+    this.setState({
+      showTick: !this.state.showTick,
+    });
   }
 
   handleSelect(gift) {
     const { fbId, sendGift } = this.props;
     sendGift(fbId, gift);
+
     this.setState({
       open: false,
-    }, this.props.toggleMenu);
+    }, () => {
+      ::this.toggleTick();
+      setTimeout(::this.toggleTick, 2000);
+      this.props.toggleMenu(fbId);
+    });
   }
 
   render() {
-    const { open } = this.state;
+    const { disabled } = this.props;
+    const { open, showTick } = this.state;
 
-    return open ? (
-      <View style={styles.root}>
-        <Animated.View style={styles.buttonContainer}>
-          <GiftButton selectGift={::this.handleSelect} giftType={FOOD.name} />
-          <GiftButton selectGift={::this.handleSelect} giftType={BEER.name} />
-          <GiftButton selectGift={::this.handleSelect} giftType={HEART.name} />
-          <GiftButton selectGift={::this.handleSelect} giftType={COFFEE.name} />
-        </Animated.View>
-        <TouchableOpacity onPress={::this.closeMenu}>
-          <View style={styles.button}>
-            <Icon name="close" style={[styles.icon, { color: '#cc0000' }]} size={24} />
-          </View>
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <View style={styles.root}>
-        <TouchableOpacity onPress={::this.openMenu}>
-          <View style={styles.button}>
-            <Icon name="gift" style={[styles.icon, { color: primary }]} size={24} />
-          </View>
-        </TouchableOpacity>
-      </View>
+    return disabled ? null : (
+      open ? (
+        <View style={styles.root}>
+          <Animated.View style={styles.buttonContainer}>
+            <GiftButton selectGift={::this.handleSelect} giftType={FOOD.name} />
+            <GiftButton selectGift={::this.handleSelect} giftType={BEER.name} />
+            <GiftButton selectGift={::this.handleSelect} giftType={HEART.name} />
+            <GiftButton selectGift={::this.handleSelect} giftType={COFFEE.name} />
+          </Animated.View>
+          <TouchableOpacity onPress={::this.closeMenu}>
+            <View style={styles.button}>
+              <Icon name="close" style={[styles.icon, { color: '#cc0000' }]} size={24} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.root}>
+          {
+            showTick ? (
+              <View style={[styles.button, { backgroundColor: success }]}>
+                <Icon name="check" style={styles.icon} size={24} color="#fff" />
+              </View>
+            ) : (
+              <TouchableOpacity onPress={::this.openMenu}>
+                <View style={styles.button}>
+                  <Icon name="gift" style={[styles.icon, { color: primary }]} size={24} />
+                </View>
+              </TouchableOpacity>
+            )
+          }
+        </View>
+      )
     );
   }
 }

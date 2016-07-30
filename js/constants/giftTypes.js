@@ -29,3 +29,9 @@ export const UNKNOWN = {
   name: 'unknown',
   color: 'black',
 };
+
+export const TICK = {
+  icon: 'check',
+  name: 'check',
+  color: '#fff',
+};

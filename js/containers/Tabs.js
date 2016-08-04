@@ -6,6 +6,8 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { userSetDeviceToken } from '../actions/user';
 import FCM from 'react-native-fcm';
 import Drawer from 'react-native-drawer';
 import DrawerContent from '../components/DrawerContent';
@@ -16,19 +18,23 @@ import People from './People';
 import Redeem from './Redeem';
 import Owe from './Owe';
 
+@connect()
 export default class Tabs extends Component {
+  static propTypes = {
+    dispatch: PropTypes.func,
+  };
+
   componentDidMount() {
     FCM.requestPermissions(); // for iOS
     FCM.getFCMToken().then(token => {
-      console.log(token)
-      // store fcm token in your server
+      this.updateDeviceToken(token);
     });
     this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+      console.log(notif);
       // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
     });
     this.refreshUnsubscribe = FCM.on('refreshToken', (token) => {
-      console.log(token)
-      // fcm token may not be available on first load, catch it here
+      this.updateDeviceToken(token);
     });
   }
 
@@ -36,6 +42,10 @@ export default class Tabs extends Component {
     // prevent leaking
     this.refreshUnsubscribe();
     this.notificationUnsubscribe();
+  }
+  
+  updateDeviceToken(token) {
+    this.props.dispatch(userSetDeviceToken(token));
   }
   
   openDrawer() {

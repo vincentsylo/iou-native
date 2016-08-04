@@ -1,7 +1,8 @@
-import { USER_LOG_IN, USER_LOG_OUT } from '../actions/user';
+import { USER_LOG_IN, USER_LOG_OUT, USER_SET_DEVICE_TOKEN } from '../actions/user';
 
 const initialState = {
   token: null,
+  deviceToken: null,
 };
 
 export default function user(state = initialState, action = {}) {
@@ -15,6 +16,11 @@ export default function user(state = initialState, action = {}) {
       return {
         ...state,
         token: null,
+      };
+    case USER_SET_DEVICE_TOKEN:
+      return {
+        ...state,
+        deviceToken: action.deviceToken,
       };
     default:
       return state;

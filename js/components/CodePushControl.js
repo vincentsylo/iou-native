@@ -37,48 +37,48 @@ export default class CodePushControl extends Component {
           switch(syncStatus) {
             case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
               self.setState({
-                syncMessage: "Checking for update."
+                syncMessage: 'Checking for update',
               });
               break;
             case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
               self.setState({
-                syncMessage: "Downloading package."
+                syncMessage: 'Downloading package',
               });
               break;
             case CodePush.SyncStatus.AWAITING_USER_ACTION:
               self.setState({
-                syncMessage: "Awaiting user action."
+                syncMessage: 'Awaiting user action',
               });
               break;
             case CodePush.SyncStatus.INSTALLING_UPDATE:
               self.setState({
-                syncMessage: "Installing update."
+                syncMessage: 'Installing update',
               });
               break;
             case CodePush.SyncStatus.UP_TO_DATE:
               self.setState({
-                syncMessage: "App up to date.",
-                progress: false
+                syncMessage: 'App up to date',
+                progress: false,
               }, () => {
                 self.props.syncComplete();
               });
               break;
             case CodePush.SyncStatus.UPDATE_IGNORED:
               self.setState({
-                syncMessage: "Update cancelled by user.",
-                progress: false
+                syncMessage: 'Update cancelled by user',
+                progress: false,
               });
               break;
             case CodePush.SyncStatus.UPDATE_INSTALLED:
               self.setState({
-                syncMessage: "Update installed.",
-                progress: false
+                syncMessage: 'Update installed',
+                progress: false,
               });
               break;
             case CodePush.SyncStatus.UNKNOWN_ERROR:
               self.setState({
-                syncMessage: "An unknown error occurred.",
-                progress: false
+                syncMessage: 'An unknown error occurred',
+                progress: false,
               }, () => {
                 self.props.syncComplete();
               });
